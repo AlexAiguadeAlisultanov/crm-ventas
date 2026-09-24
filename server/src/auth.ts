@@ -4,6 +4,11 @@ import { db } from "./db.js";
 import type { Rol, Usuario } from "./types.js";
 
 const SECRETO = process.env.SESSION_SECRET ?? "clave-de-desarrollo-no-usar-en-produccion";
+// La clave de desarrollo esta en el repositorio publico: en produccion firmaria cookies
+// que cualquiera podria falsificar, asi que sin SESSION_SECRET no se arranca.
+if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
+  throw new Error("Falta SESSION_SECRET en producción");
+}
 const NOMBRE_COOKIE = "sesion";
 const DURACION_MS = 1000 * 60 * 60 * 24 * 7; // siete días
 
