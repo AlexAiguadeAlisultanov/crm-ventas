@@ -1,0 +1,20 @@
+{
+  "name": "crm-ventas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CRM de ventas para equipos comerciales pequeños B2B",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "cd server && npm run dev",
+    "dev:web": "cd web && npm run dev",
+    "build": "npm run build --prefix web && npm run build --prefix server",
+    "start": "node server/dist/index.js",
+    "test": "npm test --prefix server",
+    "comprobar": "npm run comprobar --prefix server && npm run comprobar --prefix web",
+    "postinstall": "npm install --prefix server && npm install --prefix web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
