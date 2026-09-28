@@ -82,6 +82,7 @@ img {
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 button,
@@ -90,6 +91,13 @@ select,
 textarea {
   font: inherit;
   color: inherit;
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
 }
 
 h1,
@@ -230,6 +238,38 @@ ul {
   gap: 8px;
 }
 
+/* En pantallas estrechas no cabe todo en una sola fila: la marca y las
+   acciones se quedan arriba, la navegación baja a su propia fila para que
+   ningún enlace quede recortado (antes se comprimía hasta ser ilegible). */
+@media (max-width: 640px) {
+  .barra-superior {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .nav-principal {
+    order: 3;
+    flex: 1 1 100%;
+    gap: 2px;
+  }
+
+  .nav-link {
+    padding: 6px 8px;
+  }
+
+  .barra-superior-acciones {
+    margin-left: auto;
+  }
+
+  /* Mientras queden pestañas fuera de la vista a la derecha, se difuminan
+     en vez de cortarse en seco, para que se note que hay más y se puede
+     deslizar. La clase la añade BarraSuperior según la posición del scroll. */
+  .nav-principal.nav-principal-desbordado {
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent);
+  }
+}
+
 .contenido {
   flex: 1;
   padding: clamp(20px, 3vw, 40px) clamp(16px, 4vw, 40px) 64px;
@@ -259,6 +299,7 @@ ul {
   border-radius: var(--radio-s);
   font-size: var(--fs-2);
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
   transition: transform var(--duracion) var(--curva), background var(--duracion) var(--curva), border-color var(--duracion) var(--curva);
   background: transparent;
@@ -658,6 +699,27 @@ table.tabla tbody tr.clicable:hover {
   gap: 8px;
 }
 
+.selector-comercial {
+  width: auto;
+}
+
+/* Filtro de comercial + botón "Nueva oportunidad" del Pipeline: en pantallas
+   estrechas el botón no cabe en la misma fila que el selector sin partir el
+   texto en dos líneas y quedar más alto que él. Se apilan a ancho completo,
+   con la misma altura entre los dos. */
+@media (max-width: 640px) {
+  .pipeline-filtros {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .selector-comercial,
+  .pipeline-filtros .boton {
+    width: 100%;
+  }
+}
+
 .espacio-entre {
   display: flex;
   align-items: center;
@@ -675,10 +737,22 @@ table.tabla tbody tr.clicable:hover {
 
 .grafico-barra-fila {
   display: grid;
-  grid-template-columns: 96px 1fr auto;
+  grid-template-columns: minmax(64px, 96px) 1fr auto;
   align-items: center;
   gap: 12px;
   font-size: var(--fs-2);
+}
+
+.grafico-barra-etiqueta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--texto-secundario);
+}
+
+.grafico-barra-valor {
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .grafico-barra-pista {
@@ -693,6 +767,38 @@ table.tabla tbody tr.clicable:hover {
   border-radius: 999px;
   background: var(--acento);
   transition: width 400ms var(--curva);
+}
+
+/* ---------- Embudo de conversión ---------- */
+
+.embudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.embudo-escalon {
+  width: 100%;
+  max-width: 640px;
+  min-width: 180px;
+  padding: 10px 20px;
+  border-radius: var(--radio-l);
+  background: var(--acento-suave);
+  border: 1px solid var(--acento-borde);
+  text-align: center;
+}
+
+.embudo-escalon-etiqueta {
+  font-weight: 600;
+  font-size: var(--fs-2);
+}
+
+.embudo-escalon-tasa {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-1);
+  color: var(--texto-terciario);
 }
 
 /* ---------- Login ---------- */
@@ -755,15 +861,22 @@ table.tabla tbody tr.clicable:hover {
 .selector-idioma button {
   padding: 5px 8px;
   border-radius: 6px;
+  border: 1px solid transparent;
   font-size: var(--fs-1);
   font-weight: 600;
   color: var(--texto-terciario);
   cursor: pointer;
+  transition: background var(--duracion) var(--curva), color var(--duracion) var(--curva), border-color var(--duracion) var(--curva);
+}
+
+.selector-idioma button:hover:not(.activo) {
+  color: var(--texto-secundario);
 }
 
 .selector-idioma button.activo {
-  background: var(--bg-hover);
-  color: var(--texto);
+  background: var(--acento-suave);
+  border-color: var(--acento-borde);
+  color: var(--acento);
 }
 
 @media (max-width: 480px) {

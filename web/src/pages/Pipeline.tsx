@@ -98,29 +98,31 @@ export function Pipeline() {
 
   return (
     <div className="pila" style={{ gap: 24 }}>
-      <div className="cabecera-pagina">
-        <div>
-          <span className="numero-seccion">03</span>
-          <h1 className="titulo-pagina">{t("pipeline.titulo")}</h1>
+      <div className="pila" style={{ gap: 8 }}>
+        <div className="cabecera-pagina" style={{ marginBottom: 0 }}>
+          <div>
+            <span className="numero-seccion">03</span>
+            <h1 className="titulo-pagina">{t("pipeline.titulo")}</h1>
+          </div>
+          <div className="fila pipeline-filtros">
+            {comerciales.length > 1 && (
+              <select className="entrada selector-comercial" value={filtroComercial} onChange={(e) => setFiltroComercial(e.target.value)}>
+                <option value="">{t("pipeline.todos")}</option>
+                {comerciales.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
+            )}
+            <button className="boton boton-primario" onClick={() => setModalNueva(true)}>
+              <Plus size={16} /> {t("pipeline.nuevaOportunidad")}
+            </button>
+          </div>
         </div>
-        <div className="fila">
-          {comerciales.length > 1 && (
-            <select className="entrada" style={{ width: "auto" }} value={filtroComercial} onChange={(e) => setFiltroComercial(e.target.value)}>
-              <option value="">{t("pipeline.todos")}</option>
-              {comerciales.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nombre}
-                </option>
-              ))}
-            </select>
-          )}
-          <button className="boton boton-primario" onClick={() => setModalNueva(true)}>
-            <Plus size={16} /> {t("pipeline.nuevaOportunidad")}
-          </button>
-        </div>
-      </div>
 
-      <p className="texto-terciario">{t("pipeline.arrastra")}</p>
+        <p className="texto-terciario">{t("pipeline.arrastra")}</p>
+      </div>
 
       {aviso && (
         <div className="tarjeta" style={{ padding: "10px 14px", borderColor: "var(--error)" }} role="alert">

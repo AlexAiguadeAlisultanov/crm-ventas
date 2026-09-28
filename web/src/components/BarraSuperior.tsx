@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { LogOut, Search } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -11,15 +12,36 @@ interface Props {
 export function BarraSuperior({ onAbrirBusqueda }: Props) {
   const { t, idioma, cambiarIdioma } = useI18n();
   const { salir } = useAuth();
+  const navRef = useRef<HTMLElement>(null);
+  const [desbordado, setDesbordado] = useState(false);
 
   const enlace = (clase: { isActive: boolean }) => `nav-link${clase.isActive ? " activo" : ""}`;
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    function actualizar() {
+      if (!nav) return;
+      // Queda margen a la derecha mientras no se haya llegado al final del scroll.
+      setDesbordado(nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 4);
+    }
+
+    actualizar();
+    nav.addEventListener("scroll", actualizar, { passive: true });
+    window.addEventListener("resize", actualizar);
+    return () => {
+      nav.removeEventListener("scroll", actualizar);
+      window.removeEventListener("resize", actualizar);
+    };
+  }, [idioma]);
 
   return (
     <header className="barra-superior">
       <span className="marca">
         CRM<span>·</span>Ventas
       </span>
-      <nav className="nav-principal" aria-label="Navegación principal">
+      <nav ref={navRef} className={`nav-principal${desbordado ? " nav-principal-desbordado" : ""}`} aria-label="Navegación principal">
         <NavLink to="/hoy" className={enlace}>
           {t("nav.hoy")}
         </NavLink>
